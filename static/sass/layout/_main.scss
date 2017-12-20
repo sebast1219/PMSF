@@ -61,3 +61,32 @@ html, body {
     opacity: 0.5;
   }
 }
+
+.circle {   
+	position: absolute;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    right: 15px;
+    top: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 50%;
+    background-color: #333;
+}
+
+.red {
+    background-color: #f08030;
+}
+
+.blue {
+    background-color: #6890f0;
+}
+
+.grey {
+    background-color: #777;
+}
+
+.black {
+    background-color: #333;
+}

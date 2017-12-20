@@ -66,6 +66,7 @@ class Scanner
             $cp = !empty($row["cp"]) ? intval($row["cp"]) : null;
             $cpm = !empty($row["cp_multiplier"]) ? floatval($row["cp_multiplier"]) : null;
             $level = !empty($row["level"]) ? intval($row["level"]) : null;
+            $weather_boosted_condition = !empty($row["weather_boosted_condition"]) ? intval($row["weather_boosted_condition"]) : null;
 
             $p["disappear_time"] = $dissapear; //done
             $p["encounter_id"] = $row["encounter_id"]; //done
@@ -82,6 +83,7 @@ class Scanner
                 $p["cp"] = $cp;
                 $p["cp_multiplier"] = $cpm;
                 $p["level"] = $level;
+                $p["weather_boosted_condition"] = $weather_boosted_condition;
             }
 
             $p["latitude"] = $lat; //done

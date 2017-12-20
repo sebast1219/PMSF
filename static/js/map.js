@@ -80,6 +80,7 @@ createjs.Sound.registerSound('static/sounds/ding.mp3', 'ding')
 
 var genderType = ['♂', '♀', '⚲']
 var unownForm = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?']
+var weathers = ['NONE', 'Clear', 'Rainy', 'Partly cloudy', 'Overcast', 'Windy', 'Snow', 'Fog']
 
 /*
  text place holders:
@@ -411,6 +412,7 @@ function pokemonLabel(item) {
     var cp = item['cp']
     var cpMultiplier = item['cp_multiplier']
     var level = item['level']
+    var weather_boosted_condition = item['weather_boosted_condition']
 
     $.each(types, function (index, type) {
         typesDisplay += getTypeSpan(type)
@@ -442,6 +444,12 @@ function pokemonLabel(item) {
             i8ln('Moves') + ' : ' + pMove1 + ' / ' + pMove2 +
             '</div>'
     }
+    if (weather_boosted_condition != null && weather_boosted_condition != 0) {
+        details +=
+            '<div>' +
+				i8ln('Weather Bonus') + ' : ' + i8ln(weathers[weather_boosted_condition]) +
+            '</div>'
+	}
     if (gender != null) {
         details +=
             '<div>' +
@@ -458,10 +466,35 @@ function pokemonLabel(item) {
     if (id === 201 && form !== null && form > 0) {
         contentstring += ' (' + unownForm[item['form']] + ')'
     }
+	var weather_boost = "";
+    if (weather_boosted_condition != null && weather_boosted_condition != 0) {
+		// CLEAR = 1
+		// RAINY = 2
+		// PARTLY_CLOUDY = 3
+		// OVERCAST = 4
+		// WINDY = 5
+		// SNOW = 6
+		// FOG = 7
+		var weather_color = "";
+		if(weather_boosted_condition == 1) {
+			weather_color = 'red';
+		} else if (weather_boosted_condition == 2 || weather_boosted_condition == 6) {
+			weather_color = 'blue';
+		} else if (weather_boosted_condition == 3 || weather_boosted_condition == 4) {
+			weather_color = 'grey';
+		} else if (weather_boosted_condition == 3 || weather_boosted_condition == 4) {
+			weather_color = 'black';
+		} 
+        weather_boost =
+            '<div>' +
+				'<img height="70px" style="padding: 5px;" src="static/icons-weather/' + weather_boosted_condition + '.png" class="circle ' + weather_color + '" />' +
+            '</div>'
+	}
     contentstring += '<span> - </span>' +
         '<small>' +
         '<a href="https://pokemon.gameinfo.io/en/pokemon/' + id + '" target="_blank" title="' + i8ln('View in Pokedex') + '">#' + id + '</a>' +
         '</small>' +
+		weather_boost + 
         '<span> ' + rarityDisplay + '</span>' +
         '<span> - </span>' +
         '<small>' + typesDisplay + '</small>' +
