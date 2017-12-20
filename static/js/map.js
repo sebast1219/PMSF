@@ -1753,11 +1753,13 @@ var updateLabelDiffTime = function updateLabelDiffTime() {
 
         if (disappearsAt.time < disappearsAt.now) {
             if (element.hasAttribute('start')) {
-                timestring = '(Démarré)'
+
+                timestring = '(' + i8ln('started') + ')'
             } else if (element.hasAttribute('end')) {
-                timestring = '(Terminé)'
+                timestring = '(' + i8ln('ended') + ')'
             } else {
-                timestring = '(Expiré)'
+
+                timestring = '(' + i8ln('expired') + ')'
             }
         } else {
             timestring = '('
