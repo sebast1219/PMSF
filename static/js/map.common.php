@@ -882,6 +882,10 @@ type: StoreTypes.JSON
 default: <?php echo $noNotifyIv ? '""' : $notifyIv ?>,
 type: StoreTypes.Number
 },
+'remember_text_level_notify': {
+default: <?php echo $noNotifyLevel ? '""' : $notifyLevel ?>,
+type: StoreTypes.Number
+},
 'remember_raid_notify': {
 default: <?php echo $noNotifyRaid ? 0 : $notifyRaid ?>,
 type: StoreTypes.Number
