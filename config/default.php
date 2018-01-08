@@ -140,6 +140,9 @@ $notifyIv = '""';                                                   // "" for em
 $noNotifyLevel = false;                                                // true/false
 $notifyLevel = '""';                                                   // "" for empty or a number
 
+$noCombineNotifications = false;                                                // true/false
+$combineNotifications = 'true';                                                   // "" for empty or a number
+
 $noNotifyRaid = false;                                              // true/false
 $notifyRaid = 5;                                                    // O to disable
 

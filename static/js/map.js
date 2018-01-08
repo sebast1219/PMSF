@@ -845,42 +845,65 @@ function customizePokemonMarker(marker, item, skipNotification) {
         disableAutoPan: true
     })
 
-    if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
-        if (!skipNotification) {
-            checkAndCreateSound(item['pokemon_id'])
-            sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
-        }
-        if (marker.animationDisabled !== true) {
-            marker.setAnimation(google.maps.Animation.BOUNCE)
-        }
+    var checkSendNotification = true;
+    var checkSendAnimation = true;
+    var notifyPokemon = false;
+    var notifyIV = false;
+    var notifyLevel = false;
+	var ignorePokemon = false;
+	var ignoreIV = false;
+	var ignoreLevel = false;
+	
+    if (skipNotification) {
+        checkSendNotification = false;
     }
 
+    if (marker.animationDisabled !== true) {
+        checkSendAnimation = false;
+    }
+	
+    if (notifiedPokemon.length != 0) {
+        if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
+            notifyPokemon = true;
+        }
+    } else {
+        notifyPokemon = true;
+		ignorePokemon = true;
+	}
+	
     if (item['individual_attack'] != null) {
         var perfection = getIv(item['individual_attack'], item['individual_defense'], item['individual_stamina'])
         if (notifiedMinPerfection > 0 && perfection >= notifiedMinPerfection) {
-            if (!skipNotification) {
-                checkAndCreateSound(item['pokemon_id'])
-                sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
-            }
-            if (marker.animationDisabled !== true) {
-                marker.setAnimation(google.maps.Animation.BOUNCE)
-            }
-        }
+            notifyIV = true;
+        } else if (notifiedMinPerfection == 0) {
+            notifyIV = true;
+			ignoreIV = true;
+		}
     }
 
     if (item['level'] != null) {
         var level = item['level']
-        if (notifiedMinLevel > 0 && level >= notifiedMinLevel) {
-            if (!skipNotification) {
-                checkAndCreateSound(item['pokemon_id'])
-                sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
-            }
-            if (marker.animationDisabled !== true) {
-                marker.setAnimation(google.maps.Animation.BOUNCE)
-            }
-        }
+        if ((notifiedMinLevel > 0 && level >= notifiedMinLevel) || (notifiedMinLevel == null)) {
+            notifyLevel = true;
+        } else if(notifiedMinLevel == 0) {
+            notifyLevel = true;
+			ignoreLevel = true;
+		}
     }
-
+	
+    // alert("combineNotifications " + Store.get('combineNotifications'))
+    // alert("notifyPokemon " + notifyPokemon)
+    // alert("sendNotification " + sendNotification)
+    // alert("sendAnimation " + sendAnimation)
+    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && notifyLevel)) || (!Store.get('combineNotifications') && (notifyPokemon || notifyIV || notifyLevel))) {
+        if(checkSendNotification) {		
+            checkAndCreateSound(item['pokemon_id'])
+            sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
+        }
+        if(checkSendAnimation) {
+            marker.setAnimation(google.maps.Animation.BOUNCE)
+        }
+	}
     addListeners(marker)
 }
 
@@ -2660,6 +2683,10 @@ $(function () {
             Store.set('remember_text_level_notify', notifiedMinLevel)
         })
 
+		$('#combine-notifications-switch').change(function () {
+			Store.set('combineNotifications', this.checked)
+		})
+		
         // recall saved lists
         $selectExclude.val(Store.get('remember_select_exclude')).trigger('change')
         $selectPokemonNotify.val(Store.get('remember_select_notify')).trigger('change')

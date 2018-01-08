@@ -494,6 +494,20 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
             }
             ?>
             <?php
+            if (!$noCombineNotifications) {
+                echo '<div class="form-control switch-container">
+                <h3>'.i8ln('Combine notifications settings').'</h3>
+                <div class="onoffswitch">
+                    <input id="combine-notifications-switch" type="checkbox" name="combine-notifications-switch" class="onoffswitch-checkbox"
+                           checked>
+                    <label class="onoffswitch-label" for="combine-notifications-switch">
+                        <span class="switch-label" data-on="On" data-off="Off"></span>
+                        <span class="switch-handle"></span>
+                    </label>
+                </div>';
+            }
+            ?>
+            <?php
             if (!$noNotifyRaid) {
                 echo '<div class="form-control switch-container" id="notify-raid-wrapper">
                         <h3>'.i8ln('Notify of Minimum Raid Level').'</h3>

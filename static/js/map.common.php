@@ -886,6 +886,10 @@ type: StoreTypes.Number
 default: <?php echo $noNotifyLevel ? '""' : $notifyLevel ?>,
 type: StoreTypes.Number
 },
+'combineNotifications': {
+default: <?php echo $noCombineNotifications ? 'false' : $combineNotifications ?>,
+type: StoreTypes.Boolean
+},
 'remember_raid_notify': {
 default: <?php echo $noNotifyRaid ? 0 : $notifyRaid ?>,
 type: StoreTypes.Number
