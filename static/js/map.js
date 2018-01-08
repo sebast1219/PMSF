@@ -846,7 +846,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
     })
 
     var checkSendNotification = true;
-    var checkSendAnimation = true;
+    var checkSendAnimation = false;
     var notifyPokemon = false;
     var notifyIV = false;
     var notifyLevel = false;
@@ -859,7 +859,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
     }
 
     if (marker.animationDisabled !== true) {
-        checkSendAnimation = false;
+        checkSendAnimation = true;
     }
 	
     if (notifiedPokemon.length != 0) {
@@ -891,10 +891,6 @@ function customizePokemonMarker(marker, item, skipNotification) {
 		}
     }
 	
-    // alert("combineNotifications " + Store.get('combineNotifications'))
-    // alert("notifyPokemon " + notifyPokemon)
-    // alert("sendNotification " + sendNotification)
-    // alert("sendAnimation " + sendAnimation)
     if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && notifyLevel)) || (!Store.get('combineNotifications') && (notifyPokemon || notifyIV || notifyLevel))) {
         if(checkSendNotification) {		
             checkAndCreateSound(item['pokemon_id'])
