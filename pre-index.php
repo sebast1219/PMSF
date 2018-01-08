@@ -296,7 +296,7 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                 if ($map != "monocle") {
                     echo '<div class="form-control switch-container" id = "lured-pokestops-only-wrapper" style = "display:none">
                     <select name = "lured-pokestops-only-switch" id = "lured-pokestops-only-switch">
-                        <option value = "0"> All</option>
+                        <option value = "0"> '.i8ln('All').'</option>
                         <option value = "1"> '.i8ln('Only Lured').' </option>
                     </select>
                 </div>';

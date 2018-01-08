@@ -611,6 +611,7 @@ function gymLabel(item) {
             i8ln('Location') + '<a href="javascript:void(0);" onclick="javascript:openMapDirections(' + latitude + ',' + longitude + ');" title="' + i8ln('View in Maps') + '">' + latitude.toFixed(6) + ' , ' + longitude.toFixed(7) + '</a>' +
             '</div>' +
             '<div>' +
+
             i8ln('Last Modified') + ' : ' + lastModifiedStr +
             '</div>' +
             '<div>' +
@@ -628,6 +629,7 @@ function gymLabel(item) {
             '<div>' +
             '<center>' +
             '<div style="padding-bottom: 2px">' +
+
             i8ln('Gym owned by') + ' : ' +
             '</div>' +
             '<div>' +
@@ -646,6 +648,7 @@ function gymLabel(item) {
             i8ln('Location') + ' : <a href="javascript:void(0);" onclick="javascript:openMapDirections(' + latitude + ',' + longitude + ');" title="' + i8ln('View in Maps') + '">' + latitude.toFixed(6) + ' , ' + longitude.toFixed(7) + '</a>' +
             '</div>' +
             '<div>' +
+
             i8ln('Last Modified') + ' : ' + lastModifiedStr +
             '</div>' +
             '<div>' +
@@ -666,7 +669,7 @@ function pokestopLabel(expireTime, latitude, longitude) {
             '<b>Lured Pokéstop</b>' +
             '</div>' +
             '<div>' +
-            'Lure expires at ' + getTimeStr(expireTime) +
+            i8ln('Lure expires at') + ' ' + getTimeStr(expireTime) +
             ' <span class="label-countdown" disappears-at="' + expireTime + '">(00m00s)</span>' +
             '</div>' +
             '<div>' +
@@ -1374,8 +1377,8 @@ function loadRawData() {
         cache: false,
         beforeSend: function beforeSend() {
             if (maxLatLng > 0 && (((neLat - swLat) > maxLatLng) || ((neLng - swLng) > maxLatLng))) {
-               toastr['error'](i8ln('Please zoom in to get data.'), i8ln('Max zoom'))
-               toastr.options = {
+                toastr['error'](i8ln('Please zoom in to get data.'), i8ln('Max zoom'))
+                toastr.options = {
                     'closeButton': true,
                     'debug': false,
                     'newestOnTop': true,
@@ -1801,12 +1804,10 @@ var updateLabelDiffTime = function updateLabelDiffTime() {
 
         if (disappearsAt.time < disappearsAt.now) {
             if (element.hasAttribute('start')) {
-
                 timestring = '(' + i8ln('started') + ')'
             } else if (element.hasAttribute('end')) {
                 timestring = '(' + i8ln('ended') + ')'
             } else {
-
                 timestring = '(' + i8ln('expired') + ')'
             }
         } else {
