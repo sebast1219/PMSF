@@ -845,6 +845,10 @@ function customizePokemonMarker(marker, item, skipNotification) {
         disableAutoPan: true
     })
 
+    var notifiedPokemon = Store.get('remember_select_notify');
+    var notifiedRarity = Store.get('remember_select_rarity_notify');
+    var notifiedMinPerfection = Store.get('remember_text_perfection_notify');
+    var notifiedMinLevel = Store.get('remember_text_level_notify');
     var checkSendNotification = true;
     var checkSendAnimation = false;
     var notifyPokemon = false;
@@ -883,7 +887,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
 
     if (item['level'] != null) {
         var level = item['level']
-        if ((notifiedMinLevel > 0 && level >= notifiedMinLevel) || (notifiedMinLevel == null)) {
+        if (notifiedMinLevel > 0 && level >= notifiedMinLevel) {
             notifyLevel = true;
         } else if(notifiedMinLevel == 0) {
             notifyLevel = true;
@@ -891,7 +895,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
 		}
     }
 	
-    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && notifyLevel)) || (!Store.get('combineNotifications') && (notifyPokemon || notifyIV || notifyLevel))) {
+    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && notifyLevel)) || (!Store.get('combineNotifications') && ((notifyPokemon && !ignorePokemon) || (notifyIV && !ignoreIV) || (notifyLevel && !ignoreLevel)))) {
         if(checkSendNotification) {		
             checkAndCreateSound(item['pokemon_id'])
             sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
@@ -2683,7 +2687,10 @@ $(function () {
 			Store.set('combineNotifications', this.checked)
 		})
 		
+		$selectCombineNotifications = $('#combine-notifications-switch');
+		
         // recall saved lists
+		$selectCombineNotifications.val(Store.get('combineNotifications')).trigger('change')
         $selectExclude.val(Store.get('remember_select_exclude')).trigger('change')
         $selectPokemonNotify.val(Store.get('remember_select_notify')).trigger('change')
         $selectRarityNotify.val(Store.get('remember_select_rarity_notify')).trigger('change')
