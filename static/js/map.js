@@ -2664,7 +2664,7 @@ $(function () {
         $textPerfectionNotify.on('change', function (e) {
             notifiedMinPerfection = parseInt($textPerfectionNotify.val(), 10)
             if (isNaN(notifiedMinPerfection) || notifiedMinPerfection <= 0) {
-                notifiedMinPerfection = ''
+                notifiedMinPerfection = 0
             }
             if (notifiedMinPerfection > 100) {
                 notifiedMinPerfection = 100
@@ -2675,7 +2675,7 @@ $(function () {
         $textLevelNotify.on('change', function (e) {
             notifiedMinLevel = parseInt($textLevelNotify.val(), 10)
             if (isNaN(notifiedMinLevel) || notifiedMinLevel <= 0) {
-                notifiedMinLevel = ''
+                notifiedMinLevel = 0
             }
             if (notifiedMinLevel > 35) {
                 notifiedMinLevel = 35
