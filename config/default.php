@@ -141,7 +141,7 @@ $noNotifyLevel = false;                                                // true/f
 $notifyLevel = '""';                                                   // "" for empty or a number
 
 $noCombineNotifications = false;                                                // true/false
-$combineNotifications = 'true';                                                   // "" for empty or a number
+$combineNotifications = 'false';                                                   // "" for empty or a number
 
 $noNotifyRaid = false;                                              // true/false
 $notifyRaid = 5;                                                    // O to disable
