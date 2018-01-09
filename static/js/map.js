@@ -896,7 +896,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
 		}
     }
 	
-    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && notifyLevel)) || (!Store.get('combineNotifications') && ((notifyPokemon && !ignorePokemon) || (notifyIV && !ignoreIV) || (notifyLevel && !ignoreLevel)))) {
+    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && ignoreLevel)) || (!Store.get('combineNotifications') && ((notifyPokemon && !ignorePokemon) || (notifyIV && !ignoreIV) || (notifyLevel && !ignoreLevel)))) {
         if(checkSendNotification) {		
             checkAndCreateSound(item['pokemon_id'])
             sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
