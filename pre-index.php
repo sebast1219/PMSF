@@ -504,7 +504,8 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                         <span class="switch-label" data-on="On" data-off="Off"></span>
                         <span class="switch-handle"></span>
                     </label>
-                </div>';
+                </div>
+            </div>';
             }
             ?>
             <?php
