@@ -136,7 +136,7 @@ if (!$noPokemon) {
 			}
 
             foreach ($d['pokemons'] as $elementKey => $element) {
-				if(($element['individual_attack'] != "" && $hideMinPerfection > (($element['individual_attack'] + $element['individual_attack'] + $element['individual_attack']) / 60 * 100)) || ($element['level'] != "" && $hideMinLevel > $element['level'])) {
+				if(($element['individual_attack'] != "" && $hideMinPerfection > (($element['individual_attack'] + $element['individual_attack'] + $element['individual_attack']) / 45 * 100)) || ($element['level'] != "" && $hideMinLevel > $element['level'])) {
 					if(!in_array($element['pokemon_id'],$neids)) {
 						unset($d['pokemons'][$elementKey]);
 					}
