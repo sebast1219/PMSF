@@ -3,7 +3,11 @@
 //
 
 var $selectExclude
+var $selectNeverExclude
+var $textHidePokemonIV
+var $textHidePokemonLevel
 var $selectPokemonNotify
+var $selectPokemonAlwaysNotify
 var $selectRarityNotify
 var $textPerfectionNotify
 var $textLevelNotify
@@ -34,7 +38,11 @@ var searchMarkerStyles
 
 var timestamp
 var excludedPokemon = []
+var neverExcludedPokemon = []
+var hideMinPerfection = null
+var hideMinLevel = null
 var notifiedPokemon = []
+var alwaysNotifiedPokemon = []
 var notifiedRarity = []
 var notifiedMinPerfection = null
 var notifiedMinLevel = null
@@ -315,6 +323,8 @@ function initSidebar() {
     $('#cries-switch').prop('checked', Store.get('playCries'))
     $('#cries-switch-wrapper').toggle(Store.get('playSound'))
     $('#cries-type-filter-wrapper').toggle(Store.get('playCries'))
+    $('#hide-pokemon-iv').val(Store.get('hidePokemonByIV'))
+    $('#hide-pokemon-level').val(Store.get('hidePokemonByLevel'))
     if (document.getElementById('next-location')) {
         var searchBox = new google.maps.places.Autocomplete(document.getElementById('next-location'))
         $('#next-location').css('background-color', $('#geoloc-switch').prop('checked') ? '#e0e0e0' : '#ffffff')
@@ -848,6 +858,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
     })
 
     var notifiedPokemon = Store.get('remember_select_notify');
+    var alwaysNotifiedPokemon = Store.get('remember_select_always_notify');
     var notifiedRarity = Store.get('remember_select_rarity_notify');
     var notifiedMinPerfection = Store.get('remember_text_perfection_notify');
     var notifiedMinLevel = Store.get('remember_text_level_notify');
@@ -897,7 +908,9 @@ function customizePokemonMarker(marker, item, skipNotification) {
 		}
     }
 	
-    if((Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && ignoreLevel)) || (!Store.get('combineNotifications') && ((notifyPokemon && !ignorePokemon) || (notifyIV && !ignoreIV) || (notifyLevel && !ignoreLevel)))) {
+    if((alwaysNotifiedPokemon.indexOf(item['pokemon_id']) > -1) || 
+		(Store.get('combineNotifications') && notifyPokemon && notifyIV && notifyLevel && !(ignorePokemon && ignoreIV && ignoreLevel)) || 
+		(!Store.get('combineNotifications') && ((notifyPokemon && !ignorePokemon) || (notifyIV && !ignoreIV) || (notifyLevel && !ignoreLevel)))) {
         if(checkSendNotification) {		
             checkAndCreateSound(item['pokemon_id'])
             sendNotification(getNotifyText(item).fav_title, getNotifyText(item).fav_text, iconpath + item['pokemon_id'] + '.png', item['latitude'], item['longitude'])
@@ -1258,7 +1271,15 @@ function addListeners(marker) {
 
 function clearStaleMarkers() {
     $.each(mapData.pokemons, function (key, value) {
-        if (mapData.pokemons[key]['disappear_time'] < new Date().getTime() || excludedPokemon.indexOf(mapData.pokemons[key]['pokemon_id']) >= 0 || isTemporaryHidden(mapData.pokemons[key]['pokemon_id'])) {
+        if (mapData.pokemons[key]['disappear_time'] < new Date().getTime() || 
+		((neverExcludedPokemon.indexOf(mapData.pokemons[key]['pokemon_id']) < 0) && 
+			(
+				excludedPokemon.indexOf(mapData.pokemons[key]['pokemon_id']) >= 0 || 
+				isTemporaryHidden(mapData.pokemons[key]['pokemon_id']) || 
+				getIv(mapData.pokemons[key].individual_attack, mapData.pokemons[key].individual_defense, mapData.pokemons[key].individual_stamina) < hideMinPerfection || 
+				mapData.pokemons[key].level < hideMinLevel
+			)
+		)) {
             if (mapData.pokemons[key].marker.rangeCircle) {
                 mapData.pokemons[key].marker.rangeCircle.setMap(null)
                 delete mapData.pokemons[key].marker.rangeCircle
@@ -1269,7 +1290,7 @@ function clearStaleMarkers() {
     })
 
     $.each(mapData.lurePokemons, function (key, value) {
-        if (mapData.lurePokemons[key]['lure_expiration'] < new Date().getTime() || excludedPokemon.indexOf(mapData.lurePokemons[key]['pokemon_id']) >= 0) {
+        if ((mapData.lurePokemons[key]['lure_expiration'] < new Date().getTime() || excludedPokemon.indexOf(mapData.lurePokemons[key]['pokemon_id']) >= 0) && neverExcludedPokemon.indexOf(mapData.lurePokemons[key]['pokemon_id']) < 0) {
             mapData.lurePokemons[key].marker.setMap(null)
             delete mapData.lurePokemons[key]
         }
@@ -1395,6 +1416,9 @@ function loadRawData() {
             'oNeLng': oNeLng,
             'reids': String(reincludedPokemon),
             'eids': String(excludedPokemon),
+            'neids': String(neverExcludedPokemon),
+            'hideMinPerfection': parseInt(hideMinPerfection),
+            'hideMinLevel': parseInt(hideMinLevel),
             'token': token,
             'ville': ville
         },
@@ -1459,8 +1483,18 @@ function processPokemons(i, item) {
     if (!Store.get('showPokemon')) {
         return false // in case the checkbox was unchecked in the meantime.
     }
-
-    if (!(item['encounter_id'] in mapData.pokemons) && excludedPokemon.indexOf(item['pokemon_id']) < 0 && item['disappear_time'] > Date.now() && !isTemporaryHidden(item['pokemon_id'])) {
+    if (!(item['encounter_id'] in mapData.pokemons) && 
+	item['disappear_time'] > Date.now() &&
+	(
+		neverExcludedPokemon.indexOf(item['pokemon_id']) >= 0 || 
+		(
+			excludedPokemon.indexOf(item['pokemon_id']) < 0 &&
+			!isTemporaryHidden(item['pokemon_id']) &&
+			getIv(item['individual_attack'], item['individual_defense'], item['individual_stamina']) >= hideMinPerfection &&
+			item['level'] >= hideMinLevel
+		)
+	)
+	) {
         // add marker to map and item to dict
         if (item.marker) {
             item.marker.setMap(null)
@@ -2585,7 +2619,11 @@ $(function () {
     })
 
     $selectExclude = $('#exclude-pokemon')
+    $selectNeverExclude = $('#never-exclude-pokemon')
+    $textHidePokemonIV = $('#hide-pokemon-iv')
+    $textHidePokemonLevel = $('#hide-pokemon-level')
     $selectPokemonNotify = $('#notify-pokemon')
+    $selectPokemonAlwaysNotify = $('#always-notify-pokemon')
     $selectRarityNotify = $('#notify-rarity')
     $textPerfectionNotify = $('#notify-perfection')
     $textLevelNotify = $('#notify-level')
@@ -2632,7 +2670,17 @@ $(function () {
             data: pokeList,
             templateResult: formatState
         })
+        $selectNeverExclude.select2({
+            placeholder: i8ln('Select Pokémon'),
+            data: pokeList,
+            templateResult: formatState
+        })
         $selectPokemonNotify.select2({
+            placeholder: i8ln('Select Pokémon'),
+            data: pokeList,
+            templateResult: formatState
+        })
+        $selectPokemonAlwaysNotify.select2({
             placeholder: i8ln('Select Pokémon'),
             data: pokeList,
             templateResult: formatState
@@ -2654,10 +2702,48 @@ $(function () {
             clearStaleMarkers()
             Store.set('remember_select_exclude', excludedPokemon)
         })
+        // setup list change behavior now that we have the list to work from
+        $selectNeverExclude.on('change', function (e) {
+            buffer = neverExcludedPokemon
+            neverExcludedPokemon = $selectNeverExclude.val().map(Number)
+            clearStaleMarkers()
+            Store.set('remember_select_never_exclude', neverExcludedPokemon)
+        })
+		
         $selectPokemonNotify.on('change', function (e) {
             notifiedPokemon = $selectPokemonNotify.val().map(Number)
             Store.set('remember_select_notify', notifiedPokemon)
         })
+        $selectPokemonAlwaysNotify.on('change', function (e) {
+            alwaysNotifiedPokemon = $selectPokemonAlwaysNotify.val().map(Number)
+            Store.set('remember_select_always_notify', alwaysNotifiedPokemon)
+        })
+		
+        $textHidePokemonIV.on('change', function (e) {
+            hideMinPerfection = parseInt($textHidePokemonIV.val(), 10)
+            if (isNaN(hideMinPerfection) || hideMinPerfection <= 0) {
+                hideMinPerfection = 0
+            }
+            if (hideMinPerfection > 100) {
+                hideMinPerfection = 100
+            }
+            $textHidePokemonIV.val(hideMinPerfection)
+            Store.set('hidePokemonByIV', hideMinPerfection)
+            clearStaleMarkers()
+        })
+        $textHidePokemonLevel.on('change', function (e) {
+            hideMinLevel = parseInt($textHidePokemonLevel.val(), 10)
+            if (isNaN(hideMinLevel) || hideMinLevel <= 0) {
+                hideMinLevel = 0
+            }
+            if (hideMinLevel > 35) {
+                hideMinLevel = 35
+            }
+            $textHidePokemonLevel.val(hideMinLevel)
+            Store.set('hidePokemonByLevel', hideMinLevel)
+            clearStaleMarkers()
+        })
+		
         $selectRarityNotify.on('change', function (e) {
             notifiedRarity = $selectRarityNotify.val().map(String)
             Store.set('remember_select_rarity_notify', notifiedRarity)
@@ -2695,7 +2781,11 @@ $(function () {
         // recall saved lists
 		$selectCombineNotifications.val(Store.get('combineNotifications')).trigger('change')
         $selectExclude.val(Store.get('remember_select_exclude')).trigger('change')
+        $selectNeverExclude.val(Store.get('remember_select_never_exclude')).trigger('change')
+        $textHidePokemonIV.val(Store.get('hidePokemonByIV')).trigger('change')
+        $textHidePokemonLevel.val(Store.get('hidePokemonByLevel')).trigger('change')
         $selectPokemonNotify.val(Store.get('remember_select_notify')).trigger('change')
+        $selectPokemonAlwaysNotify.val(Store.get('remember_select_always_notify')).trigger('change')
         $selectRarityNotify.val(Store.get('remember_select_rarity_notify')).trigger('change')
         $textPerfectionNotify.val(Store.get('remember_text_perfection_notify')).trigger('change')
         $textLevelNotify.val(Store.get('remember_text_level_notify')).trigger('change')

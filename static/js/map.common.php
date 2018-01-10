@@ -870,8 +870,24 @@ type: StoreTypes.String
 default: <?php echo $noHidePokemon ? '[]' : $hidePokemon ?>,
 type: StoreTypes.JSON
 },
+'remember_select_never_exclude': {
+default: <?php echo $noNeverHidePokemon ? '[]' : $neverHidePokemon ?>,
+type: StoreTypes.JSON
+},
+'hidePokemonByIV': {
+default: <?php echo $noHidePokemonByIV ? '""' : $hideIv ?>,
+type: StoreTypes.JSON
+},
+'hidePokemonByLevel': {
+default: <?php echo $noHidePokemonByLevel ? '""' : $hideLevel ?>,
+type: StoreTypes.JSON
+},
 'remember_select_notify': {
 default: <?php echo $noNotifyPokemon ? '[]' : $notifyPokemon ?>,
+type: StoreTypes.JSON
+},
+'remember_select_always_notify': {
+default: <?php echo $noAlwaysNotifyPokemon ? '[]' : $alwaysNotifyPokemon ?>,
 type: StoreTypes.JSON
 },
 'remember_select_rarity_notify': {

@@ -356,6 +356,38 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                     </label>
                 </div>';
                 }
+                if (!$noNeverHidePokemon) {
+                    echo '<div class="form-control">
+                    <label for="never-exclude-pokemon">
+                        <h3>'.i8ln('Never Hide Pokemon').'</h3>
+                        <div style="max-height:165px;overflow-y:auto">
+                            <select id="never-exclude-pokemon" multiple="multiple"></select>
+                        </div>
+                    </label>
+                </div>';
+                }
+                ?>
+                <?php
+                if (!$noHidePokemonByIV) {
+					echo '<div class="form-control">
+					<label for="hide-pokemon-iv">
+						<h3>'.i8ln('Hide Pokemon Below IV').'</h3>
+						<input id="hide-pokemon-iv" type="text" name="hide-pokemon-iv"
+							   placeholder="'.i8ln('Hide Pokemon Below IV').'"/>
+					</label>
+				</div>';
+                }
+                ?>
+                <?php
+                if (!$noHidePokemonByLevel) {
+					echo '<div class="form-control">
+					<label for="hide-pokemon-level">
+						<h3>'.i8ln('Hide Pokemon Below Level').'</h3>
+						<input id="hide-pokemon-level" type="text" name="hide-pokemon-level"
+							   placeholder="'.i8ln('Hide Pokemon Below level').'"/>
+					</label>
+				</div>';
+                }
                 ?>
             </div>
 
@@ -489,6 +521,18 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                     <h3>'.i8ln('Notify of Level').'</h3>
                     <input id="notify-level" type="text" name="notify-level"
                            placeholder="'.i8ln('Minimum level').'"/>
+                </label>
+            </div>';
+            }
+            ?>
+            <?php
+            if (!$noAlwaysNotifyPokemon) {
+                echo '<div class="form-control">
+                <label for="always-notify-pokemon">
+                    <h3>'.i8ln('Always Notify Pokemon').'</h3>
+                    <div style="max-height:165px;overflow-y:auto">
+                        <select id="always-notify-pokemon" multiple="multiple"></select>
+                    </div>
                 </label>
             </div>';
             }

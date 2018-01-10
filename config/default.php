@@ -82,9 +82,15 @@ $motdContent = "";
 $noPokemon = false;                                                 // true/false
 $enablePokemon = 'true';                                            // true/false
 $noHighLevelData = false;                                           // true/false
+$noNeverHidePokemon = false;                                             // true/false
+$hidePokemon = '[13,16,19,21,39,41,46,48,52,161,163,165,167,177,183,190,194,198,261,263,300,312]';         // [] for empty
 $noHidePokemon = false;                                             // true/false
-$hidePokemon = '[10, 13, 16, 19, 21, 29, 32, 41, 46, 48, 50, 52, 56, 74, 77, 96, 111, 133,
-                  161, 163, 167, 177, 183, 191, 194, 168]';         // [] for empty
+$neverHidePokemon = '[76,112,130,131,143,149,201,242,248]';         // [] for empty
+
+$noHidePokemonByIV = false;                                             // true/false
+$hideIv = 0;                                                   // "" for empty or a number
+$noHidePokemonByLevel = false;                                             // true/false
+$hideLevel = 0;                                                   // "" for empty or a number
 
 $noGyms = false;                                                    // true/false
 $enableGyms = 'false';                                              // true/false
@@ -129,7 +135,10 @@ $enableSpawnArea = 'false';                                         // true/fals
 /* Notification Settings */
 
 $noNotifyPokemon = false;                                           // true/false
-$notifyPokemon = '[201]';                                           // [] for empty
+$notifyPokemon = '[]';                                           // [] for empty
+
+$noAlwaysNotifyPokemon = false;                                           // true/false
+$alwaysNotifyPokemon = '[76,112,130,131,143,149,201,242,248]';                                           // [] for empty
 
 $noNotifyRarity = false;                                            // true/false
 $notifyRarity = '[]';                                               // "Common", "Uncommon", "Rare", "Very Rare", "Ultra Rare"

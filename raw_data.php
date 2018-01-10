@@ -59,6 +59,8 @@ $d["lastgyms"] = !empty($_POST['gyms']) ? $_POST['gyms'] : false;
 $d["lastslocs"] = !empty($_POST['scanned']) ? $_POST['scanned'] : false;
 $d["lastspawns"] = !empty($_POST['spawnpoints']) ? $_POST['spawnpoints'] : false;
 $d["lastpokemon"] = !empty($_POST['pokemon']) ? $_POST['pokemon'] : false;
+$hideMinPerfection = !empty($_POST['hideMinPerfection']) ? $_POST['hideMinPerfection'] : 0;
+$hideMinLevel = !empty($_POST['hideMinLevel']) ? $_POST['hideMinLevel'] : 0;
 
 $timestamp = !empty($_POST['timestamp']) ? $_POST['timestamp'] : 0;
 
@@ -110,6 +112,7 @@ $d["oNeLng"] = $neLng;
 
 $ids = array();
 $eids = array();
+$neids = array();
 $reids = array();
 $debug['1_before_functions'] = microtime(true) - $timing['start'];
 
@@ -126,18 +129,30 @@ if (!$noPokemon) {
             }
         }
 
-        if (!empty($_POST['eids'])) {
+        if (!empty($_POST['eids']) || $hideMinPerfection != 0 || $hideMinLevel != 0) {
             $eids = explode(",", $_POST['eids']);
+			if (!empty($_POST['neids'])) {
+				$neids = explode(",", $_POST['neids']);				
+			}
 
             foreach ($d['pokemons'] as $elementKey => $element) {
-                foreach ($element as $valueKey => $value) {
-                    if ($valueKey == 'pokemon_id') {
-                        if (in_array($value, $eids)) {
+				if(($element['individual_attack'] != "" && $hideMinPerfection > (($element['individual_attack'] + $element['individual_attack'] + $element['individual_attack']) / 60 * 100)) || ($element['level'] != "" && $hideMinLevel > $element['level'])) {
+					if(!in_array($element['pokemon_id'],$neids)) {
+						unset($d['pokemons'][$elementKey]);
+					}
+				} else if(in_array($element['pokemon_id'], $eids)) {
+					if(!in_array($element['pokemon_id'],$neids)) {
+						unset($d['pokemons'][$elementKey]);
+					}
+				}
+                // foreach ($element as $valueKey => $value) {
+                    // if ($valueKey == 'pokemon_id') {
+                        // if (in_array($value, $eids)) {
                             //delete this particular object from the $array
-                            unset($d['pokemons'][$elementKey]);
-                        }
-                    }
-                }
+                            // unset($d['pokemons'][$elementKey]);
+                        // }
+                    // }
+                // }
             }
         }
 
