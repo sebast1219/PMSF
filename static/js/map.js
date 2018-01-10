@@ -299,6 +299,7 @@ function initSidebar() {
     $('#max-level-raids-filter-switch').val(Store.get('maxRaidLevel'))
     $('#last-update-gyms-switch').val(Store.get('showLastUpdatedGymsOnly'))
     $('#pokemon-switch').prop('checked', Store.get('showPokemon'))
+    $('#combine-notifications-switch').prop('checked', Store.get('combineNotifications'))
     $('#pokestops-switch').prop('checked', Store.get('showPokestops'))
     $('#lured-pokestops-only-switch').val(Store.get('showLuredPokestopsOnly'))
     $('#lured-pokestops-only-wrapper').toggle(Store.get('showPokestops'))
@@ -2684,11 +2685,12 @@ $(function () {
             Store.set('remember_text_level_notify', notifiedMinLevel)
         })
 
-		$('#combine-notifications-switch').change(function () {
+		$selectCombineNotifications = $('#combine-notifications-switch');
+		
+		$selectCombineNotifications.change(function () {
 			Store.set('combineNotifications', this.checked)
 		})
 		
-		$selectCombineNotifications = $('#combine-notifications-switch');
 		
         // recall saved lists
 		$selectCombineNotifications.val(Store.get('combineNotifications')).trigger('change')
