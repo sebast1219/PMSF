@@ -60,6 +60,35 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="theme-color" content="#ffffff">
 
+    <?php
+        function pokemonFilterImages($noPokemonNumbers)
+        {
+            global $mons;
+            if (empty($mons)) {
+                $json = file_get_contents('static/dist/data/pokemon.min.json');
+                $mons = json_decode($json, true);
+            }
+            echo '<div class="pokemon-list">';
+            $i = 0;
+            $z = 0;
+            foreach ($mons as $k => $pokemon) {
+                if ($k > 386) {
+                    break;
+                }
+                echo "<span class='pokemon-icon-sprite' data-value='" . $k . "'><span class='$k inner-bg' style='background-position:-" . $i * 48.25 . "px -".$z."px'></span>";
+                if (!$noPokemonNumbers) {
+                    echo "<span class='pokemon-number'>" . $k . "</span>";
+                }
+                echo "</span>";
+                if ($i == 27) {
+                    $i = -1;
+                    $z = $z + 48.25;
+                }
+                $i++;
+            }
+            echo '</div>';
+        }
+    ?>
 
     <?php
     if ($gAnalyticsId != "") {
@@ -129,8 +158,12 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
             <h3><?php echo i8ln('Marker Settings') ?></h3>
             <div>
                 <?php
-                if (!$noPokemon) {
-                    echo '<div class="form-control switch-container">
+            if (!$noPokemon) {
+                ?>
+            <div>
+                <?php
+
+                echo '<div class=" form-control switch-container" style="float:none;height:35px;margin-bottom:0px;">
                     <h3>Pokemon</h3>
                     <div class="onoffswitch">
                         <input id="pokemon-switch" type="checkbox" name="pokemon-switch" class="onoffswitch-checkbox"
@@ -140,9 +173,48 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                             <span class="switch-handle"></span>
                         </label>
                     </div>
-                </div>';
-                }
-                ?>
+
+
+                </div>'; ?>
+                <div id="pokemon-filter-wrapper" style="display:none">
+					<?php
+					if (!$noHidePokemon) {
+						?>
+						<h4><?php echo i8ln('Hide Pokemon') ?></h4>
+						<div class="form-control hide-select-2">
+							<label for="exclude-pokemon">
+								<div class="pokemon-container">
+									<input id="exclude-pokemon" type="text" readonly="true">
+									<?php
+									pokemonFilterImages($noPokemonNumbers); ?>
+								</div>
+								<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
+							</label>
+						</div>
+						<?php
+					} ?>
+					<?php
+					if (!$noNeverHidePokemon) {
+					?>
+						<h4><?php echo i8ln('Never Hide Pokemon') ?></h4>
+						<div class="form-control hide-select-2">
+							<label for="never-exclude-pokemon">
+								<div class="pokemon-container">
+									<input id="never-exclude-pokemon" type="text" readonly="true">
+									<?php
+									pokemonFilterImages($noPokemonNumbers); ?>
+								</div>
+								<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
+							</label>
+						</div>
+						<?php
+					}
+					?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
                 <?php
                 if (!$noRaids) {
                     echo '<div class="form-control switch-container" id="raids-wrapper">
@@ -346,26 +418,26 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                 }
                 ?>
                 <?php
-                if (!$noHidePokemon) {
-                    echo '<div class="form-control">
-                    <label for="exclude-pokemon">
-                        <h3>'.i8ln('Hide Pokemon').'</h3>
-                        <div style="max-height:165px;overflow-y:auto">
-                            <select id="exclude-pokemon" multiple="multiple"></select>
-                        </div>
-                    </label>
-                </div>';
-                }
-                if (!$noNeverHidePokemon) {
-                    echo '<div class="form-control">
-                    <label for="never-exclude-pokemon">
-                        <h3>'.i8ln('Never Hide Pokemon').'</h3>
-                        <div style="max-height:165px;overflow-y:auto">
-                            <select id="never-exclude-pokemon" multiple="multiple"></select>
-                        </div>
-                    </label>
-                </div>';
-                }
+                // if (!$noHidePokemon) {
+                    // echo '<div class="form-control">
+                    // <label for="exclude-pokemon">
+                        // <h3>'.i8ln('Hide Pokemon').'</h3>
+                        // <div style="max-height:165px;overflow-y:auto">
+                            // <select id="exclude-pokemon" multiple="multiple"></select>
+                        // </div>
+                    // </label>
+                // </div>';
+                // }
+                // if (!$noNeverHidePokemon) {
+                    // echo '<div class="form-control">
+                    // <label for="never-exclude-pokemon">
+                        // <h3>'.i8ln('Never Hide Pokemon').'</h3>
+                        // <div style="max-height:165px;overflow-y:auto">
+                            // <select id="never-exclude-pokemon" multiple="multiple"></select>
+                        // </div>
+                    // </label>
+                // </div>';
+                // }
                 ?>
                 <?php
                 if (!$noHidePokemonByIV) {
@@ -481,14 +553,19 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
             ?>
             <?php
             if (!$noNotifyPokemon) {
-                echo '<div class="form-control">
-                <label for="notify-pokemon">
-                    <h3>'.i8ln('Notify of Pokemon').'</h3>
-                    <div style="max-height:165px;overflow-y:auto">
-                        <select id="notify-pokemon" multiple="multiple"></select>
-                    </div>
-                </label>
-            </div>';
+                ?>
+                <div class="form-control hide-select-2">
+                    <label for="notify-pokemon">
+                        <h3><?php echo i8ln('Notify of Pokemon') ?></h3>
+						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
+                        <div style="max-height:165px;overflow-y:auto;">
+                            <input id="notify-pokemon" type="text" readonly="true"/>
+                            <?php
+                                pokemonFilterImages($noPokemonNumbers); ?>
+                        </div>
+                    </label>
+                </div>
+                <?php
             }
             ?>
             <?php
@@ -527,14 +604,19 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
             ?>
             <?php
             if (!$noAlwaysNotifyPokemon) {
-                echo '<div class="form-control">
-                <label for="always-notify-pokemon">
-                    <h3>'.i8ln('Always Notify Pokemon').'</h3>
-                    <div style="max-height:165px;overflow-y:auto">
-                        <select id="always-notify-pokemon" multiple="multiple"></select>
-                    </div>
-                </label>
-            </div>';
+                ?>
+                <div class="form-control hide-select-2">
+                    <label for="always-notify-pokemon">
+                        <h3><?php echo i8ln('Always Notify Pokemon') ?></h3>
+						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
+                        <div style="max-height:165px;overflow-y:auto;">
+                            <input id="always-notify-pokemon" type="text" readonly="true"/>
+                            <?php
+                                pokemonFilterImages($noPokemonNumbers); ?>
+                        </div>
+                    </label>
+                </div>
+                <?php
             }
             ?>
             <?php
@@ -733,7 +815,7 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
 <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>

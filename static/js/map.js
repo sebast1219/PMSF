@@ -117,16 +117,18 @@ var notifyText = 'disappears at <dist> (<udist>)'
 
 function excludePokemon(id) { // eslint-disable-line no-unused-vars
     $selectExclude.val(
-        $selectExclude.val().concat(id)
+        $selectExclude.val().split(',').concat(id).join(',')
     ).trigger('change')
+    $('label[for="exclude-pokemon"] .pokemon-list .pokemon-icon-sprite[data-value="' + id + '"]').addClass('active')
+    clearStaleMarkers()
 }
 
 function notifyAboutPokemon(id) { // eslint-disable-line no-unused-vars
     $selectPokemonNotify.val(
-        $selectPokemonNotify.val().concat(id)
+        $selectPokemonNotify.val().split(',').concat(id).join(',')
     ).trigger('change')
+    $('label[for="notify-pokemon"] .pokemon-list .pokemon-icon-sprite[data-value="' + id + '"]').addClass('active')
 }
-
 function removePokemonMarker(encounterId) { // eslint-disable-line no-unused-vars
     if (mapData.pokemons[encounterId].marker.rangeCircle) {
         mapData.pokemons[encounterId].marker.rangeCircle.setMap(null)
@@ -307,6 +309,7 @@ function initSidebar() {
     $('#max-level-raids-filter-switch').val(Store.get('maxRaidLevel'))
     $('#last-update-gyms-switch').val(Store.get('showLastUpdatedGymsOnly'))
     $('#pokemon-switch').prop('checked', Store.get('showPokemon'))
+    $('#pokemon-filter-wrapper').toggle(Store.get('showPokemon'))
     $('#combine-notifications-switch').prop('checked', Store.get('combineNotifications'))
     $('#pokestops-switch').prop('checked', Store.get('showPokestops'))
     $('#lured-pokestops-only-switch').val(Store.get('showLuredPokestopsOnly'))
@@ -2355,6 +2358,53 @@ function fetchCriesJson() {
     })
 }
 
+
+function pokemonSpritesFilter() {
+    jQuery('.pokemon-list').parent().find('.select2').hide()
+    loadDefaultImages()
+    jQuery('.pokemon-list .pokemon-icon-sprite').on('click', function () {
+        var img = jQuery(this)
+        var select = jQuery(this).parent().parent().find('input')
+        var value = select.val().split(',')
+        var id = img.data('value').toString()
+        if (img.hasClass('active')) {
+            select.val(value.filter(function (elem) {
+                return elem !== id
+            }).join(',')).trigger('change')
+            img.removeClass('active')
+        } else {
+            select.val((value.concat(id).join(','))).trigger('change')
+            img.addClass('active')
+        }
+    })
+}
+
+function loadDefaultImages() {
+    var ep = Store.get('remember_select_exclude')
+    var nep = Store.get('remember_select_never_exclude')
+    var en = Store.get('remember_select_notify')
+    var alwaysnotify = Store.get('remember_select_always_notify')
+    $('label[for="exclude-pokemon"] .pokemon-icon-sprite').each(function () {
+        if (ep.indexOf($(this).data('value')) !== -1) {
+            $(this).addClass('active')
+        }
+    })
+    $('label[for="never-exclude-pokemon"] .pokemon-icon-sprite').each(function () {
+        if (nep.indexOf($(this).data('value')) !== -1) {
+            $(this).addClass('active')
+        }
+    })
+    $('label[for="notify-pokemon"] .pokemon-icon-sprite').each(function () {
+        if (en.indexOf($(this).data('value')) !== -1) {
+            $(this).addClass('active')
+        }
+    })
+    $('label[for="always-notify-pokemon"] .pokemon-icon-sprite').each(function () {
+        if (alwaysnotify.indexOf($(this).data('value')) !== -1) {
+            $(this).addClass('active')
+        }
+    })
+}
 //
 // Page Ready Exection
 //
@@ -2632,6 +2682,7 @@ $(function () {
     })
 
     $selectGymMarkerStyle.val(Store.get('gymMarkerStyle')).trigger('change')
+    pokemonSpritesFilter()
 })
 
 $(function () {
@@ -2659,6 +2710,19 @@ $(function () {
     $raidNotify = $('#notify-raid')
     var numberOfPokemon = 386
 
+    $('.select-all').on('click', function (e) {
+        e.preventDefault()
+        var parent = $(this).parent()
+        parent.find('.pokemon-list .pokemon-icon-sprite').addClass('active')
+        parent.find('input').val(Array.from(Array(numberOfPokemon + 1).keys()).slice(1).join(',')).trigger('change')
+    })
+
+    $('.hide-all').on('click', function (e) {
+        e.preventDefault()
+        var parent = $(this).parent()
+        parent.find('.pokemon-list .pokemon-icon-sprite').removeClass('active')
+        parent.find('input').val('').trigger('change')
+    })
     $raidNotify.select2({
         placeholder: 'Minimum raid level',
         minimumResultsForSearch: Infinity
@@ -2697,33 +2761,41 @@ $(function () {
         $selectExclude.select2({
             placeholder: i8ln('Select Pokémon'),
             data: pokeList,
-            templateResult: formatState
+            templateResult: formatState,
+            multiple: true,
+            maximumSelectionSize: 1
         })
         $selectNeverExclude.select2({
             placeholder: i8ln('Select Pokémon'),
             data: pokeList,
-            templateResult: formatState
+            templateResult: formatState,
+            multiple: true,
+            maximumSelectionSize: 1
         })
         $selectPokemonNotify.select2({
             placeholder: i8ln('Select Pokémon'),
             data: pokeList,
-            templateResult: formatState
+            templateResult: formatState,
+            multiple: true,
+            maximumSelectionSize: 1
         })
         $selectPokemonAlwaysNotify.select2({
             placeholder: i8ln('Select Pokémon'),
             data: pokeList,
-            templateResult: formatState
+            templateResult: formatState,
+            multiple: true,
+            maximumSelectionSize: 1
         })
         $selectRarityNotify.select2({
             placeholder: i8ln('Select Rarity'),
-            data: [i8ln('Common'), i8ln('Uncommon'), i8ln('Rare'), i8ln('Very Rare'), i8ln('Ultra Rare')],
-            templateResult: formatState
+            data: ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Ultra Rare'],
+            templateResult: formatState,
         })
 
         // setup list change behavior now that we have the list to work from
         $selectExclude.on('change', function (e) {
             buffer = excludedPokemon
-            excludedPokemon = $selectExclude.val().map(Number)
+            excludedPokemon = $selectExclude.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
             buffer = buffer.filter(function (e) {
                 return this.indexOf(e) < 0
             }, excludedPokemon)
@@ -2731,20 +2803,19 @@ $(function () {
             clearStaleMarkers()
             Store.set('remember_select_exclude', excludedPokemon)
         })
-        // setup list change behavior now that we have the list to work from
+		
         $selectNeverExclude.on('change', function (e) {
-            buffer = neverExcludedPokemon
-            neverExcludedPokemon = $selectNeverExclude.val().map(Number)
+            neverExcludedPokemon = $selectNeverExclude.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
             clearStaleMarkers()
             Store.set('remember_select_never_exclude', neverExcludedPokemon)
         })
 		
         $selectPokemonNotify.on('change', function (e) {
-            notifiedPokemon = $selectPokemonNotify.val().map(Number)
+            notifiedPokemon = $selectPokemonNotify.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
             Store.set('remember_select_notify', notifiedPokemon)
         })
         $selectPokemonAlwaysNotify.on('change', function (e) {
-            alwaysNotifiedPokemon = $selectPokemonAlwaysNotify.val().map(Number)
+            alwaysNotifiedPokemon = $selectPokemonNotify.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
             Store.set('remember_select_always_notify', alwaysNotifiedPokemon)
         })
 		
@@ -2912,6 +2983,15 @@ $(function () {
         buildSwitchChangeListener(mapData, ['gyms'], 'showGyms').bind(this)()
     })
     $('#pokemon-switch').change(function () {
+        var options = {
+            'duration': 500
+        }
+        var wrapper = $('#pokemon-filter-wrapper')
+        if (this.checked) {
+            wrapper.show(options)
+        } else {
+            wrapper.hide(options)
+        }
         buildSwitchChangeListener(mapData, ['pokemons'], 'showPokemon').bind(this)()
     })
     $('#scanned-switch').change(function () {
