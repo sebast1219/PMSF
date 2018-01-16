@@ -557,12 +557,12 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                 <div class="form-control hide-select-2">
                     <label for="notify-pokemon">
                         <h3><?php echo i8ln('Notify of Pokemon') ?></h3>
-						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
                         <div style="max-height:165px;overflow-y:auto;">
                             <input id="notify-pokemon" type="text" readonly="true"/>
                             <?php
                                 pokemonFilterImages($noPokemonNumbers); ?>
                         </div>
+						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
                     </label>
                 </div>
                 <?php
@@ -608,12 +608,12 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                 <div class="form-control hide-select-2">
                     <label for="always-notify-pokemon">
                         <h3><?php echo i8ln('Always Notify Pokemon') ?></h3>
-						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
                         <div style="max-height:165px;overflow-y:auto;">
                             <input id="always-notify-pokemon" type="text" readonly="true"/>
                             <?php
                                 pokemonFilterImages($noPokemonNumbers); ?>
                         </div>
+						<a href="#" class="button select-all"><?php echo i8ln('All') ?></a><a href="#" class="button hide-all"><?php echo i8ln('None') ?></a>
                     </label>
                 </div>
                 <?php
