@@ -667,6 +667,7 @@ function gymLabel(item) {
             gymCp +
             '<div>' +
             memberStr +
+            parkStr +
             '</div>' +
             '<div>' +
             i8ln('Location') + ' : <a href="javascript:void(0);" onclick="javascript:openMapDirections(' + latitude + ',' + longitude + ');" title="' + i8ln('View in Maps') + '">' + latitude.toFixed(6) + ' , ' + longitude.toFixed(7) + '</a>' +
