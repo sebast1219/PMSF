@@ -140,6 +140,7 @@ AND    lon < :neLng", [':swLat' => $swLat, ':swLng' => $swLng, ':neLat' => $neLa
       f.lat as latitude,
       f.lon as longitude,
       f.name,
+      f.park,
       fs.team team_id,
       fs.guard_pokemon_id,
       fs.slots_available,
