@@ -896,7 +896,7 @@ function customizePokemonMarker(marker, item, skipNotification) {
     }
 	
     if (notifiedPokemon.length != 0) {
-        if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
+        if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || alwaysNotifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
             notifyPokemon = true;
         }
     } else {
