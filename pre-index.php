@@ -242,6 +242,17 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                             </label>
                         </div>
                     </div>
+                    <div class="form-control switch-container" id="raids-ex-wrapper">
+                        <h3><?php echo i8ln('Only Eligible Gyms') ?></h3>
+                        <div class="onoffswitch">
+                            <input id="raids-ex-switch" type="checkbox" name="raids-ex-switch"
+                                   class="onoffswitch-checkbox" checked>
+                            <label class="onoffswitch-label" for="raids-ex-switch">
+                                <span class="switch-label" data-on="On" data-off="Off"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="form-control switch-container" id="min-level-raids-filter-wrapper">
                         <h3><?php echo i8ln('Minimum Raid Level') ?></h3>
                         <select name="min-level-raids-filter-switch" id="min-level-raids-filter-switch">
@@ -293,17 +304,6 @@ if (!empty($_GET['lat']) && !empty($_GET['lon'])) {
                 }
                 ?>
                 <div id="gyms-filter-wrapper" style="display:none">
-                    <div class="form-control switch-container" id="raids-ex-wrapper">
-                        <h3><?php echo i8ln('Only Eligible Gyms') ?></h3>
-                        <div class="onoffswitch">
-                            <input id="raids-ex-switch" type="checkbox" name="raids-ex-switch"
-                                   class="onoffswitch-checkbox" checked>
-                            <label class="onoffswitch-label" for="raids-ex-switch">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
-                                <span class="switch-handle"></span>
-                            </label>
-                        </div>
-                    </div>
                     <div class="form-control switch-container" id="team-gyms-only-wrapper">
                         <h3><?php echo i8ln('Team') ?></h3>
                         <select name="team-gyms-filter-switch" id="team-gyms-only-switch">

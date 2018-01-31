@@ -952,9 +952,6 @@ function getGymMarkerIcon(item) {
     }
 	
 	var exIcon = ''
-	if (park != null && park !== undefined) {
-		exIcon = '<img src="static/images/ex.png" style="position:absolute;right:25px;bottom:2px;"/>'
-	}
 	
     if (item['raid_pokemon_id'] != null && item.raid_end > Date.now()) {
         return '<div style="position:relative;">' +
@@ -964,6 +961,9 @@ function getGymMarkerIcon(item) {
             '</div>'
     } else if (item['raid_level'] !== null && item.raid_end > Date.now()) {
         var raidEgg = ''
+		if (park != null && park !== undefined) {
+			exIcon = '<img src="static/images/ex.png" style="position:absolute;right:25px;bottom:2px;"/>'
+		}
         if (item['raid_level'] <= 2) {
             raidEgg = 'normal'
         } else if (item['raid_level'] <= 4) {
@@ -977,8 +977,12 @@ function getGymMarkerIcon(item) {
 			exIcon +
             '</div>'
     } else {
+		if (park != null && park !== undefined) {
+			exIcon = '<img src="static/images/ex.png" style="position:absolute;right:15px;bottom:2px;"/>'
+		}
         return '<div>' +
             '<img src="static/forts/' + Store.get('gymMarkerStyle') + '/' + gymTypes[item['team_id']] + '.png" style="width:48px;height: auto;"/>' +
+			exIcon +
             '</div>'
     }
 }
@@ -1651,7 +1655,7 @@ function processGyms(i, item) {
         }
     }
 
-    if (Store.get('exRaids') && item.park != null && item.park != undefined) {
+    if (Store.get('exRaids') && (item.park == null || item.park != undefined)) {
 		removeGymFromMap(item['gym_id'])
 		return true
     }
