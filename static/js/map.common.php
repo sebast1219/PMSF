@@ -1051,15 +1051,15 @@ default: 16,
 type: StoreTypes.Number
 },
 'spritefile': {
-default: '<?php echo $copyrightSafe ? 'static/icons-safe-1.png' : 'static/icons-im-1.png' ?>',
+default: 'static/icons-im-1.png',
 type: StoreTypes.String
 },
 'spritefileLarge': {
-default: '<?php echo $copyrightSafe ? 'static/icons-safe-1-bigger.png' : 'static/icons-im-1-bigger.png' ?>',
+default: 'static/icons-im-1-bigger.png',
 type: StoreTypes.String
 },
 'icons': {
-default: '<?php echo $copyrightSafe ? 'static/icons-safe/' : 'static/icons-pokemon/' ?>',
+default: 'static/icons-pokemon/',
 type: StoreTypes.String
 }
 };
