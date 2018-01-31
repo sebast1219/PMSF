@@ -589,7 +589,7 @@ function gymLabel(item) {
     }
 	
 	var park = ''
-	if (item['park'] !== 'None' && item['park'] !== undefined) {
+	if (item['park'] != null && item['park'] !== undefined) {
 		park = i8ln('Park') + ': ' + item['park']
 	}
 	
