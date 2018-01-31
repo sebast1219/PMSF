@@ -1658,7 +1658,7 @@ function processGyms(i, item) {
         }
     }
 
-    if (Store.get('exRaids') && (item.park == null || item.park != undefined)) {
+    if (Store.get('exRaids') && (item.park == null || item.park == undefined)) {
 		removeGymFromMap(item['gym_id'])
 		return true
     }
