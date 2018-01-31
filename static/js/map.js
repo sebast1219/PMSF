@@ -18,6 +18,7 @@ var $switchOpenGymsOnly
 var $selectTeamGymsOnly
 var $selectLastUpdateGymsOnly
 var $switchActiveRaids
+var $switchRaidsEx
 var $selectMinGymLevel
 var $selectMaxGymLevel
 var $selectMinRaidLevel
@@ -303,6 +304,7 @@ function initSidebar() {
     $('#raids-switch').prop('checked', Store.get('showRaids'))
     $('#raids-filter-wrapper').toggle(Store.get('showRaids'))
     $('#active-raids-switch').prop('checked', Store.get('activeRaids'))
+    $('#raids-ex-switch').prop('checked', Store.get('exRaids'))
     $('#min-level-gyms-filter-switch').val(Store.get('minGymLevel'))
     $('#max-level-gyms-filter-switch').val(Store.get('maxGymLevel'))
     $('#min-level-raids-filter-switch').val(Store.get('minRaidLevel'))
@@ -895,8 +897,8 @@ function customizePokemonMarker(marker, item, skipNotification) {
         checkSendAnimation = true;
     }
 	
-    if (notifiedPokemon.length != 1) {
-        if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || alwaysNotifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
+    if (notifiedPokemon.length != 0) {
+        if (notifiedPokemon.indexOf(item['pokemon_id']) > -1 || notifiedRarity.indexOf(item['pokemon_rarity']) > -1) {
             notifyPokemon = true;
         }
     } else {
@@ -950,7 +952,7 @@ function getGymMarkerIcon(item) {
     }
 	
 	var exIcon = ''
-	if (park !== 'None' && park !== undefined) {
+	if (park != null && park !== undefined) {
 		exIcon = '<img src="static/images/ex.png" style="position:absolute;right:25px;bottom:2px;"/>'
 	}
 	
@@ -1649,6 +1651,11 @@ function processGyms(i, item) {
         }
     }
 
+    if (Store.get('exRaids') && item.park != null && item.park != undefined) {
+		removeGymFromMap(item['gym_id'])
+		return true
+    }
+
     if (raidLevel < Store.get('minRaidLevel') && item.raid_end > Date.now()) {
         removeGymFromMap(item['gym_id'])
         return true
@@ -2151,7 +2158,7 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
         }
 
 		var park = ''
-		if (result.park !== 'None' && result.park !== undefined) {
+		if (result.park != null && result.park !== undefined) {
 			park = i8ln('Park') + ' : ' + result.park
 		}
         var raidSpawned = result['raid_level'] != null
@@ -2565,6 +2572,14 @@ $(function () {
 
     $switchActiveRaids.on('change', function () {
         Store.set('activeRaids', this.checked)
+        lastgyms = false
+        updateMap()
+    })
+
+    $switchRaidsEx = $('#raids-ex-switch')
+
+    $switchRaidsEx.on('change', function () {
+        Store.set('exRaids', this.checked)
         lastgyms = false
         updateMap()
     })

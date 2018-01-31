@@ -85,7 +85,6 @@ $noHighLevelData = false;                                           // true/fals
 $noNeverHidePokemon = false;                                             // true/false
 $hidePokemon = '[13,16,19,21,39,41,46,48,52,161,163,165,167,177,183,190,194,198,261,263,300,312]';         // [] for empty
 $noHidePokemon = false;                                             // true/false
-$noPokemonNumbers = false;                                             // true/false
 $neverHidePokemon = '[76,112,130,131,143,149,201,242,248]';         // [] for empty
 
 $noHidePokemonByIV = false;                                             // true/false
@@ -101,6 +100,7 @@ $gymSidebar = 'true';                                               // true/fals
 $noRaids = false;                                                   // true/false
 $enableRaids = 'false';                                             // true/false
 $activeRaids = 'false';                                             // true/false
+$exRaids = 'false';                                             // true/false
 $minRaidLevel = 1;
 $maxRaidLevel = 5;
 

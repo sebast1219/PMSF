@@ -918,6 +918,10 @@ type: StoreTypes.Boolean
 default: <?php echo $activeRaids ?>,
 type: StoreTypes.Boolean
 },
+'exRaids': {
+default: <?php echo $exRaids ?>,
+type: StoreTypes.Boolean
+},
 'minRaidLevel': {
 default: <?php echo $minRaidLevel ?>,
 type: StoreTypes.Number
