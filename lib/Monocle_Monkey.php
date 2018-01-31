@@ -141,6 +141,7 @@ AND    lon < :neLng", [':swLat' => $swLat, ':swLng' => $swLng, ':neLat' => $neLa
       f.lon as longitude,
       f.name,
       f.park,
+      f.sponsor,
       fs.team team_id,
       fs.guard_pokemon_id,
       fs.slots_available,
@@ -185,6 +186,9 @@ AND    lon < :neLng", [':swLat' => $swLat, ':swLng' => $swLng, ':neLat' => $neLa
             $gym["last_scanned"] = $gym["last_scanned"] * 1000;
             $gym["raid_start"] = $gym["raid_start"] * 1000;
             $gym["raid_end"] = $gym["raid_end"] * 1000;
+			if($gym["park"] == "" && $gym["sponsor"] != 0) {
+				$gym["park"] = utf8_encode("Arène sponsorisée");
+			}
             $data[$gym["gym_id"]] = $gym;
 
             unset($gyms[$i]);
