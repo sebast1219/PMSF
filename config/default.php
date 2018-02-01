@@ -80,6 +80,7 @@ $motdContent = "";
 /* Marker Settings */
 
 $noPokemon = false;                                                 // true/false
+$noPokemonNumbers = false;                                          // true/false
 $enablePokemon = 'true';                                            // true/false
 $noHighLevelData = false;                                           // true/false
 $noNeverHidePokemon = false;                                             // true/false
