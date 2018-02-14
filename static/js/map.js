@@ -2840,7 +2840,7 @@ $(function () {
             Store.set('remember_select_notify', notifiedPokemon)
         })
         $selectPokemonAlwaysNotify.on('change', function (e) {
-            alwaysNotifiedPokemon = $selectPokemonNotify.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
+            alwaysNotifiedPokemon = $selectPokemonAlwaysNotify.val().split(',').map(Number).sort(function (a, b) { return parseInt(a) - parseInt(b) })
             Store.set('remember_select_always_notify', alwaysNotifiedPokemon)
         })
 		
