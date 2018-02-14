@@ -102,7 +102,7 @@ var weathers = ['NONE', 'Clear', 'Rainy', 'Partly cloudy', 'Overcast', 'Windy', 
  <def> - defense as number
  <sta> - stamnia as number
  */
-var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>)'
+var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>) ' + i8ln('level') + '<lvl>'
 var notifyNoIvTitle = '<pkm>'
 
 /*
@@ -110,7 +110,7 @@ var notifyNoIvTitle = '<pkm>'
  <dist>  - disappear time
  <udist> - time until disappear
  */
-var notifyText = 'disappears at <dist> (<udist>)'
+var notifyText = i8ln('disappears at') + ' <dist> (<udist>)'
 
 //
 // Functions
@@ -844,7 +844,7 @@ function getTimeUntil(time) {
 function getNotifyText(item) {
     var iv = getIv(item['individual_attack'], item['individual_defense'], item['individual_stamina'])
     var find = ['<prc>', '<pkm>', '<atk>', '<def>', '<sta>']
-    var replace = [iv ? iv.toFixed(1) : '', item['pokemon_name'], item['individual_attack'], item['individual_defense'], item['individual_stamina']]
+    var replace = [iv ? iv.toFixed(1) : '', i8ln(item['pokemon_name']), item['individual_attack'], item['individual_defense'], item['individual_stamina'], item['level']]
     var ntitle = repArray(iv ? notifyIvTitle : notifyNoIvTitle, find, replace)
     var dist = new Date(item['disappear_time']).toLocaleString([], {
         hour: '2-digit', minute: '2-digit',
