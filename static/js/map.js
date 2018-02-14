@@ -102,7 +102,7 @@ var weathers = ['NONE', 'Clear', 'Rainy', 'Partly cloudy', 'Overcast', 'Windy', 
  <def> - defense as number
  <sta> - stamnia as number
  */
-var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>) ' + i8ln('level') + '<lvl>'
+var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>) ' + i8ln('level') + ' <lvl>'
 var notifyNoIvTitle = '<pkm>'
 
 /*
