@@ -91,7 +91,7 @@ createjs.Sound.registerSound('static/sounds/ding.mp3', 'ding')
 
 
 var genderType = ['♂', '♀', '⚲']
-var unownForm = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?']
+var forms = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?', i8ln('Normal'), i8ln('Sunny'), i8ln('Rainy'), i8ln('Snowy'), i8ln('Normal'), i8ln('Attack'), i8ln('Defense'), i8ln('Speed')]
 var weathers = ['NONE', 'Clear', 'Rainy', 'Partly cloudy', 'Overcast', 'Windy', 'Snow', 'Fog']
 
 /*
@@ -482,9 +482,9 @@ function pokemonLabel(item) {
     var contentstring =
         '<div>' +
         '<b>' + name + '</b>'
-    if (id === 201 && form !== null && form > 0) {
-        contentstring += ' (' + unownForm[item['form']] + ')'
-    }
+    if (form !== null && form > 0 && forms.length > form) { 
+        contentstring += ' (' + forms[item['form']] + ')' 
+    } 
 	var weather_boost = "";
     if (weather_boosted_condition != null && weather_boosted_condition != 0) {
 		// CLEAR = 1
